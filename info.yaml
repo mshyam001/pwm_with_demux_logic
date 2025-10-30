@@ -27,36 +27,36 @@ project:
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
   # Inputs
-ui[0]: "DATA0 - config data LSB"
-ui[1]: "DATA1 - config data"
-ui[2]: "DATA2 - config data"
-ui[3]: "DATA3 - config data"
-ui[4]: "DATA4 - config data"
-ui[5]: "DATA5 - config data"
-ui[6]: "DATA6 - config data"
-ui[7]: "DATA7 - config data MSB"
-
-# Outputs
-
-uo[0]: "PWM_O - PWM waveform (active high)"
-uo[1]: "unused (driven 0)"
-uo[2]: "unused (driven 0)"
-uo[3]: "unused (driven 0)"
-uo[4]: "unused (driven 0)"
-uo[5]: "unused (driven 0)"
-uo[6]: "unused (driven 0)"
-uo[7]: "unused (driven 0)"
-
-#Bidirectional pins
-
-uio[0]: "SEL0 - select LSB (00=set, 01=clear, 10=reload)"
-uio[1]: "SEL1 - select MSB"
-uio[2]: "WR - 1-cycle write strobe"
-uio[3]: "COMMIT - 1-cycle apply shadows to active"
-uio[4]: "unused (input only)"
-uio[5]: "unused (input only)"
-uio[6]: "unused (input only)"
-uio[7]: "unused (input only)"
+  ui[0]: clk
+  ui[1]: res_ni
+  ui[2]: set_thres_i
+  ui[3]: reload_i
+  ui[0]: ""
+  ui[1]: ""
+  ui[2]: ""
+  ui[3]: ""
+  ui[4]: ""
+  ui[5]: ""
+  ui[6]: ""
+  ui[7]: ""
+  # Outputs
+  uo[0]: pwm_o
+  uo[1]: ""
+  uo[2]: ""
+  uo[3]: ""
+  uo[4]: ""
+  uo[5]: ""
+  uo[6]: ""
+  uo[7]: ""
+  # Bidirectional pins
+  uio[0]: ""
+  uio[1]: ""
+  uio[2]: ""
+  uio[3]: ""
+  uio[4]: ""
+  uio[5]: ""
+  uio[6]: ""
+  uio[7]: ""
 
 # Do not change!
 yaml_version: 6
