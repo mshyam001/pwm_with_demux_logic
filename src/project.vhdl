@@ -12,7 +12,7 @@ entity tt_um_VHDL_PWM_DEMUX is
         ena     : in  std_logic;
         clk     : in  std_logic;
         rst_n   : in  std_logic
-    );
+    );Z
 end tt_um_VHDL_PWM_DEMUX;
 
 architecture rtl of tt_um_VHDL_PWM_DEMUX is
