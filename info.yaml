@@ -36,7 +36,7 @@ ui[5]: "DATA5 - config data"
 ui[6]: "DATA6 - config data"
 ui[7]: "DATA7 - config data MSB"
 
-Outputs
+# Outputs
 
 uo[0]: "PWM_O - PWM waveform (active high)"
 uo[1]: "unused (driven 0)"
@@ -47,7 +47,7 @@ uo[5]: "unused (driven 0)"
 uo[6]: "unused (driven 0)"
 uo[7]: "unused (driven 0)"
 
-Bidirectional pins
+#Bidirectional pins
 
 uio[0]: "SEL0 - select LSB (00=set, 01=clear, 10=reload)"
 uio[1]: "SEL1 - select MSB"
