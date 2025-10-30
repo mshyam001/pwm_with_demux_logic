@@ -17,16 +17,17 @@ end tt_um_VHDL_PWM_DEMUX;
 
 architecture rtl of tt_um_VHDL_PWM_DEMUX is
   component pwm_cfg_demux is   
-    clk       : in  std_logic;
-    res_ni    : in  std_logic;
+            Port (
+                clk       : in  std_logic;
+                res_ni    : in  std_logic;
 
-    -- Compact config interface (demuxed 8-bit bus)
-    data_i    : in  unsigned(7 downto 0);              -- shared 8-bit bus
-    sel_i     : in  std_logic_vector(1 downto 0);      -- "00"=set, "01"=clear, "10"=reload
-    wr_i      : in  std_logic;                         -- 1-cycle write strobe
-    commit_i  : in  std_logic;                         -- atomic apply (same-cycle OK)
+                -- Compact config interface (demuxed 8-bit bus)
+                data_i    : in  unsigned(7 downto 0);              -- shared 8-bit bus
+                sel_i     : in  std_logic_vector(1 downto 0);      -- "00"=set, "01"=clear, "10"=reload
+                wr_i      : in  std_logic;                         -- 1-cycle write strobe
+                commit_i  : in  std_logic;                         -- atomic apply (same-cycle OK)
 
-    pwm_o     : out std_logic
+                pwm_o     : out std_logic
  end component;
     
     signal data_s      : unsigned(7 downto 0);
