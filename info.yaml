@@ -27,10 +27,10 @@ project:
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
   # Inputs
-  ui[0]: clk
-  ui[1]: res_ni
-  ui[2]: set_thres_i
-  ui[3]: reload_i
+  ui[0]: "clk"
+  ui[1]: ""
+  ui[2]: ""
+  ui[3]: ""
   ui[0]: ""
   ui[1]: ""
   ui[2]: ""
@@ -40,7 +40,7 @@ pinout:
   ui[6]: ""
   ui[7]: ""
   # Outputs
-  uo[0]: pwm_o
+  uo[0]: "pwm_o"
   uo[1]: ""
   uo[2]: ""
   uo[3]: ""
