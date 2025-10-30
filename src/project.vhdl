@@ -28,6 +28,7 @@ architecture rtl of tt_um_VHDL_PWM_DEMUX is
                 commit_i  : in  std_logic;                         -- atomic apply (same-cycle OK)
 
                 pwm_o     : out std_logic
+                );
  end component;
     
     signal data_s      : unsigned(7 downto 0);
