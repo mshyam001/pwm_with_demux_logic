@@ -4,7 +4,7 @@ use IEEE.numeric_std.all;
 
 entity pwm is
   generic (
-    WIDTH : positive := 8
+    WIDTH : positive := 10
   );
   port (
     clk          : in  std_logic;
@@ -17,7 +17,6 @@ entity pwm is
 end entity pwm;
 
 architecture rtl of pwm is
-  -- Sized zero to keep operators away from unconstrained aggregates.
   constant ZERO_U : unsigned(WIDTH-1 downto 0) := (others => '0');
 
   signal cnt    : unsigned(WIDTH-1 downto 0) := (others => '0');
@@ -40,8 +39,6 @@ begin
 
       -- PWM next-state (compare on current count)
       next_pwm := pwm_q;
-
-      -- Clear then Set -> SET wins if both hit same tick
       if cnt = clr_thres_i then
         next_pwm := '0';
       end if;
@@ -52,7 +49,6 @@ begin
       cnt   <= next_cnt;
       pwm_q <= next_pwm;
 
-      -- Sim-only guard (non-synthesizable)
       -- pragma translate_off
       if reload_i = ZERO_U then
         assert false report "pwm: reload_i = 0 -> counter stalls; use >= 1." severity warning;
@@ -67,6 +63,7 @@ end architecture rtl;
 -------------------------------------------------------------------------------
 -- COMPACT CONFIG DEMUX WRAPPER
 -------------------------------------------------------------------------------
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -76,11 +73,11 @@ entity pwm_cfg_demux is
     clk       : in  std_logic;
     res_ni    : in  std_logic;
 
-    -- Compact config interface (demuxed 8-bit bus)
-    data_i    : in  unsigned(7 downto 0);              -- shared 8-bit bus
-    sel_i     : in  std_logic_vector(1 downto 0);      -- "00"=set, "01"=clear, "10"=reload
-    wr_i      : in  std_logic;                         -- 1-cycle write strobe
-    commit_i  : in  std_logic;                         -- atomic apply (same-cycle OK)
+    -- 10-bit compact config interface
+    data_i    : in  unsigned(9 downto 0);             -- shared 10-bit bus
+    sel_i     : in  std_logic_vector(1 downto 0);     -- "00"=set, "01"=clear, "10"=reload
+    wr_i      : in  std_logic;                        -- 1-cycle write strobe
+    commit_i  : in  std_logic;                        -- atomic apply
 
     pwm_o     : out std_logic
   );
@@ -88,20 +85,17 @@ end entity pwm_cfg_demux;
 
 architecture rtl of pwm_cfg_demux is
   -- Shadow registers (written by bus)
-  signal set_shadow    : unsigned(7 downto 0) := (others => '0');
-  signal clr_shadow    : unsigned(7 downto 0) := (others => '0');
-  signal reload_shadow : unsigned(7 downto 0) := (others => '0');
+  signal set_shadow    : unsigned(9 downto 0) := (others => '0');
+  signal clr_shadow    : unsigned(9 downto 0) := (others => '0');
+  signal reload_shadow : unsigned(9 downto 0) := (others => '0');
 
   -- Active registers (drive PWM)
-  signal set_active    : unsigned(7 downto 0) := (others => '0');
-  signal clr_active    : unsigned(7 downto 0) := (others => '0');
-  signal reload_active : unsigned(7 downto 0) := (others => '0');
+  signal set_active    : unsigned(9 downto 0) := (others => '0');
+  signal clr_active    : unsigned(9 downto 0) := (others => '0');
+  signal reload_active : unsigned(9 downto 0) := (others => '0');
 
-  -- Component declaration (broad tool support)
   component pwm is
-    generic (
-      WIDTH : positive := 8
-    );
+    generic ( WIDTH : positive := 10 );
     port (
       clk          : in  std_logic;
       res_ni       : in  std_logic;
@@ -112,9 +106,8 @@ architecture rtl of pwm_cfg_demux is
     );
   end component;
 begin
-  -- Writes to shadows + atomic commit to actives (same-cycle write+commit supported)
   cfg_proc : process (clk, res_ni)
-    variable set_v, clr_v, reload_v : unsigned(7 downto 0);
+    variable set_v, clr_v, reload_v : unsigned(9 downto 0);
   begin
     if res_ni = '0' then
       set_shadow    <= (others => '0');
@@ -140,19 +133,18 @@ begin
         end case;
       end if;
 
-      -- update shadows with any write effect
+      -- update shadows
       set_shadow    <= set_v;
       clr_shadow    <= clr_v;
       reload_shadow <= reload_v;
 
-      -- commit sees post-write values (atomic apply)
+      -- atomic commit (post-write values)
       if commit_i = '1' then
         set_active    <= set_v;
         clr_active    <= clr_v;
         reload_active <= reload_v;
       end if;
 
-      -- Sim-time check (non-synthesizable)
       -- pragma translate_off
       if wr_i = '1' then
         assert (sel_i = "00" or sel_i = "01" or sel_i = "10")
@@ -163,11 +155,9 @@ begin
     end if;
   end process;
 
-  -- PWM core (WIDTH fixed at 8)
+  -- 10-bit PWM core
   u_pwm: pwm
-    generic map (
-      WIDTH => 8
-    )
+    generic map ( WIDTH => 10 )
     port map (
       clk          => clk,
       res_ni       => res_ni,
