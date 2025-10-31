@@ -27,7 +27,7 @@ This design is a **10-bit PWM generator** with a **compact configuration demux**
 - commit=1 → copy all shadows to actives in the pwm_module
 
 **Frequency and duty (plain text formulas):**
-- PWM frequency = f_clk / (reload + 1)
+- PWM frequency = f_clk / (reload + 1) 
 - High time (for set < clr) = (clr - set) / (reload + 1) of the period
 - If set > clr, the high window wraps around the end of the period.
  
@@ -37,7 +37,7 @@ This design is a **10-bit PWM generator** with a **compact configuration demux**
   - sel = "01" → write **CLEAR**
   - sel = "10" → write **RELOAD**
   - wr = 1 stores data_i into the selected **shadow**.
-  - commit = 1 atomically copies **all shadows** into the **active** registers (*_active) in the same clock edge.  
+  - commit = 1 copies **all shadows** into the **active** registers (*_active) in the same clock edge.  
     (Same-cycle wr=1 and commit=1 is supported: the just-written value is applied.)
 
   **Reset/enable**  
@@ -54,7 +54,6 @@ This design is a **10-bit PWM generator** with a **compact configuration demux**
 - uio_out is driven 0 and uio_oe is 0 (uio pins used as inputs only).
 > Note: reload must be **≥ 1**. If reload = 0, the counter would stall (the RTL asserts a sim-time warning).
 
----
 
 ## How to test
 
@@ -65,26 +64,26 @@ This design is a **10-bit PWM generator** with a **compact configuration demux**
    - Target values: reload = 1023, set = 0, clear = 512.
    - Data bus wiring: data_i[9:8] = uio_in[5:4], data_i[7:0] = ui_in[7:0].
 
-   **Write RELOAD**
+   *Write RELOAD*
    - Put data_i = 1023 (0x3FF): set uio_in[5:4]="11", ui_in="11111111".
    - Set sel="10" → uio_in[1:0]="10".
    - Pulse wr: uio_in[2]=1 for one clock, then back to 0.
 
-   **Write SET**
+   *Write SET*
    - Put data_i = 0: uio_in[5:4]="00", ui_in="00000000".
    - sel="00", pulse wr for one clock.
 
-   **Write CLEAR**
+   *Write CLEAR*
    - Put data_i = 512 (0x200): uio_in[5:4]="10", ui_in="00000000".
    - sel="01", pulse wr for one clock.
 
-   **Commit atomically**
+   *Commit Simultaneously*
    - Pulse commit: uio_in[3]=1 for one clock.
 
 3. **Observe the output**
    - uo_out[0] toggles with period 1024 / fclk and ~50% duty in this example.
 
-4. **Quick tweaks**
+4. **Inputs type for different Requirements**
    - Increase duty: raise clear (for set=0 case).
    - Shift phase: move set away from 0.
    - Change frequency: change reload (remember it’s terminal count).
