@@ -86,6 +86,6 @@ This design is a **10-bit PWM generator** with a **compact configuration demux**
 4. **Inputs type for different Requirements**
    - Increase duty: raise clear (for set=0 case).
    - Shift phase: move set away from 0.
-   - Change frequency: change reload (remember it’s terminal count).
+
 
 
