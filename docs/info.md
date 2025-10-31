@@ -35,7 +35,7 @@ This design is a **10-bit PWM generator** with a **compact configuration demux**
   - commit = 1 atomically copies **all shadows** into the **active** registers (*_active) in the same clock edge.  
     (Same-cycle wr=1 and commit=1 is supported: the just-written value is applied.)
 
-- **Reset/enable**  
+  **Reset/enable**  
   Internally, reset is gated with ena (res_ni_g <= rst_n and ena), so the design stays in reset while the tile isn’t enabled.
 
 ### TinyTapeout pin map (10-bit data path)
