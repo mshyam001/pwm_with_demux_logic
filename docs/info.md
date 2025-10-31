@@ -5,10 +5,15 @@ sections.
 You can also include images in this folder and reference them in the markdown. Each image must be less than
 512 kb in size, and the combined size of all images must be less than 1 MB.
 -->
+# 10-bit PWM with Demux Logic
+
+**Institution:** FH Kärnten  
+**Course:** Digital-1  
+**Program:** Integrated Systems & Circuit Design
 
 ## How it works
 
-This design is a **10-bit PWM generator** with a **compact configuration demux** and **atomic update** mechanism.
+This design is a **10-bit PWM generator** with a **compact configuration demux** and **simultaneously update** mechanism.
 **PWM core**  
   A 10-bit up-counter runs from 0 to reload_active.  
   On the clock where cnt = set_active, the output goes **high**.  
